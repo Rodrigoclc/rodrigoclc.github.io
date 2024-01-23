@@ -1,0 +1,147 @@
+body {
+    background-color: #82928d;
+    max-width: 30rem;
+    margin: auto;
+    border-radius: .5rem;
+    padding: .5rem;
+    height: 95vh;
+}
+
+header {
+    cursor: pointer;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.editarCategoria {
+    border: solid black .25rem;
+    border-radius: .25rem;
+    padding: .25rem;
+    margin-bottom: 7px;
+    cursor: pointer;
+}
+
+.rendasDespesas {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 95%;
+    margin-bottom: 5px;
+}
+
+.divsRendaDespesa {
+    cursor: pointer;
+    width: 20%;
+}
+
+.divhr {
+    display: flex;
+    width: 95%;
+    align-items: center;
+}
+
+.divhr > div{
+    width: 50%;
+}
+
+hr {
+    margin: 0;
+}
+
+.rendaSelecionada {
+    border-color: orangered;
+    color: orangered;
+}
+
+.despesaSelecionada {
+    border-color: orangered;
+    color: orangered;
+}
+
+.categorias {
+    padding: .5rem;
+    width: 95%;
+    background-color: white;
+    margin-bottom: 2px;
+    border-radius: .25rem;
+}
+
+p {
+    margin: 0;
+}
+
+.janelasModal {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.281);
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+}
+
+.modalEdicao {
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    padding: 5px;
+}
+
+.modalNovoProjeto {
+    background-color: #82928d;
+    border-radius: .25rem;
+    width: 100%;
+    max-width: 30rem;
+    height: 130px;
+    align-items: center;
+    padding: 2px;
+}
+
+.modalNovoProjeto > form > input {
+    width: 95%;
+    border: solid orangered 1px;
+    padding: 1px 3px 1px 3px;
+}
+
+.modalNovoProjeto >form > p {
+    margin-bottom: 3px;
+}
+
+.modalNovoProjeto > h3 {
+    margin-top: .75rem;
+    text-align: center;
+}
+
+.divsButton {
+    display: flex;
+    margin-top: 2px;
+    justify-content: space-between;
+    width: 97%;
+}
+
+.divsButton > button {
+    width: 48%;
+}
+
+.modalEdicao {
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    padding: 5px;
+}
+
+.divsModalEdicao {
+    padding: 5px;
+    background-color: white;
+    margin-bottom: 2px;
+    border-radius: .25rem;
+}

@@ -1,0 +1,45 @@
+<body>
+    <header>
+        <h3 [routerLink]="''">< Editar categorias</h3>
+    </header>
+    <main>
+        <div (click)="chamarModalCriarOuAtualizar(0)" class="editarCategoria">
+            <p>+ Adicionar categoria</p>
+        </div>
+        <div class="rendasDespesas">
+            <div class="divsRendaDespesa" (click)="mostrarCategorias(0)"><p [class.rendaSelecionada]="isSelecionarRenda">Rendas</p></div>
+            <div><hr style="height: 1rem;border-color: orangered;"></div>
+            <div class="divsRendaDespesa" (click)="mostrarCategorias(1)"><p [class.despesaSelecionada]="isSelecionarDespesa">Despesas</p></div>
+        </div>
+        <div class="divhr">
+            <div>
+                <hr [class.rendaSelecionada]="isSelecionarRenda" id="hr1">
+            </div>
+            <div>
+                <hr [class.despesaSelecionada]="isSelecionarDespesa" id="hr2">
+            </div>
+        </div>
+        <div *ngFor="let i of listaCategorias" (click)="chamarModalEdicao(i)" class="categorias"><p>{{ i }}</p></div>
+        <!--Modal para editar categorias-->>
+        <div *ngIf="isModalNovaCategoria" class="janelasModal">            
+            <div class="modalNovoProjeto">
+                <h3>{{ criarOuAtualizar }}</h3>
+                <form [formGroup]="novoProjetoForm" (ngSubmit)="adicionarOuEditarCategoria(criarOuAtualizar)">
+                    <p>Categoria:</p>
+                    <input type="text"  formControlName="categoria">                    
+                    <div class="divsButton">
+                        <button type="button" (click)="desfazerModalNovaCategoria()">Cancelar</button>
+                        <button type="submit">Concluir</button>
+                    </div>
+                </form>
+            </div>            
+        </div>
+        <!--Modal para selecionar, atualizar e excluir projetos-->
+        <div *ngIf="isModalEdicao" (click)="desfazerModalEdicao()" class="janelasModal">
+            <div class="modalEdicao">
+                <div class="divsModalEdicao" (click)="chamarModalCriarOuAtualizar(1)"><p>Atualizar</p></div>
+                <div class="divsModalEdicao" (click)="excluir()"><p>Excluir</p></div>
+            </div>
+        </div>
+    </main>
+</body>

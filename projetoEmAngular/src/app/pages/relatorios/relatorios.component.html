@@ -1,0 +1,13 @@
+<body>
+    <header>
+        <h3 [routerLink]="''">< Relatório</h3>
+    </header>
+    <main>
+        <div class="projetoSelecionado">
+            <div>{{ projetoSelecionado }}</div>            
+            <select (change)="categoriaEscolhida()" [(ngModel)]="opcaoSelecionada">
+                <option *ngFor="let i of seletor">{{ i }}</option>
+            </select>            
+        </div>
+    </main>
+</body>

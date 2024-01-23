@@ -1,0 +1,8 @@
+body {
+    background-color: #82928d;
+    max-width: 30rem;
+    margin: auto;
+    border-radius: .5rem;
+    padding: .5rem;
+    height: 95vh;
+}

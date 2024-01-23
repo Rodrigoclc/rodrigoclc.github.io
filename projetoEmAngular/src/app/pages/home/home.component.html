@@ -1,0 +1,52 @@
+<body>
+    <header>
+        <h1>Despesas de Compras</h1>
+    </header>
+    <main>
+            <select [(ngModel)]="opcaoSelecionada" (change)="salvarProjetoSelecionado()">
+                <option *ngFor="let opcao of primeirosOptions" [value]="opcao">{{ opcao }}</option>
+            </select>
+        <div class="container">
+
+            <div class="miniContainer">
+                <div [routerLink]="'/adicionarrenda'" class="cards">
+                    <div><p>Adicionar renda</p></div>
+                </div>
+                <div [routerLink]="'/adicionardespesa'" class="cards">
+                    <div><p>Adicionar despesas</p></div>
+                </div>
+            </div>
+            <div class="miniContainer">
+                <div class="cards" [routerLink]="'lista'">
+                    <div><p>Lista</p></div>
+                </div>
+                <div class="cards" [routerLink]="'relatorios'">
+                    <div><p>Relatórios</p></div>
+                </div>
+            </div>
+            <div class="miniContainer">
+                <div class="cards" [routerLink]="'projetos'">
+                    <div><p>Projetos</p></div>
+                </div>
+                <div class="cards">
+                    <div [routerLink]="'opcoes'"><p>Opções</p></div>
+                </div>
+            </div>
+            <div class="divmaeresultado">
+                <div class="divResultadoTitulos">
+                    <div>Saldo inicial:</div>
+                    <div>Renda:</div>
+                    <div>Despesa:</div>
+                    <div>Saldo final:</div>
+
+                </div>
+                <div class="divResultadoValor">
+                    <div>{{ saldoInicial }}</div>
+                    <div>{{ renda }}</div>
+                    <div>{{ despesa }}</div>
+                    <div>{{ saldoFinal }}</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>

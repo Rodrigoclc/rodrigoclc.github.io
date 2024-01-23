@@ -1,0 +1,36 @@
+body {
+    background-color: #82928d;
+    max-width: 30rem;
+    margin: auto;
+    border-radius: .5rem;
+    padding: .5rem;
+    min-height: 95vh;
+}
+
+header {
+    cursor: pointer;
+}
+
+.projetoSelecionado {
+    display: flex;
+    justify-content: space-betweenx;
+    margin-bottom: 5px;
+}
+
+.projetoSelecionado > div, select {
+    width: 50%;
+    cursor: pointer;
+}
+
+.trasacoes {
+    display: flex;
+    background-color: white;
+    height: 70px;
+    border-radius: .25rem;
+    margin-bottom: 2px;
+}
+
+.trasacoes > div {
+    width: 49vw;
+    padding: 2px;
+}

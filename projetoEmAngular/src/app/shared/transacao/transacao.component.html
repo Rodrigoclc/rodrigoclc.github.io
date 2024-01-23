@@ -1,0 +1,19 @@
+<body>
+    <header>
+        <h3 [routerLink]="''">< {{ label }}</h3>
+    </header>
+    <main>
+        <form [formGroup]="transacoes" (ngSubmit)="subimtForm()">
+            <input type="number" class="addTransacao" placeholder="0" formControlName="valor">
+            <select class="categoria" formControlName="categoria">
+                <option *ngFor="let i of categorias">{{ i }}</option>
+            </select>
+            <input type="text" class="descricao" placeholder="Escreva uma breve descrição" formControlName="descricao">
+            <div class="dataHora">
+                <input type="date" formControlName="data">
+                <input type="time" formControlName="hora">
+            </div>
+            <button type="submit">Confirmar</button>
+        </form>
+    </main>
+</body>
