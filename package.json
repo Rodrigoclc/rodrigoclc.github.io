@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "ghdocs": "ng build --output-path docs --base-href /rodrigoclc.github.io/"
+    "ghbuild": "ng build --output-path docs --base-href /rodrigoclc.github.io/"
   },
   "private": true,
   "dependencies": {
