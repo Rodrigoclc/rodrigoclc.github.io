@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Projeto, Transacao } from 'src/app/interfaces/iProjeto';
-import { CategoriasService } from 'src/app/services/categorias.service';
-import { CreatePojectService } from 'src/app/services/projetos.service';
+import { Component } from '@angular/core';
+import { TransacaoComponent } from '../../shared/components/transacao/transacao.component';
+import { CreatePojectService } from '../../services/projetos.service';
+import { CategoriasService } from '../../services/categorias.service';
+import { Projeto, Transacao } from '../../interfaces/iProjeto';
 
 @Component({
   selector: 'app-adicionar-renda',
+  standalone: true,
+  imports: [
+    TransacaoComponent
+  ],
   templateUrl: './adicionar-renda.component.html',
-  styleUrls: ['./adicionar-renda.component.css']
+  styleUrl: './adicionar-renda.component.css'
 })
-export class AdicionarRendaComponent implements OnInit {
+export class AdicionarRendaComponent {
 
   listaProjetos!: Projeto[];
   ultimoProjeto!: string;
@@ -25,11 +29,11 @@ export class AdicionarRendaComponent implements OnInit {
     this.ultimoProjeto = this.projetoSevice.buscarUltimoProjetoSelecionado();
     this.listaProjetos = this.projetoSevice.recuperarProjetos();
     this.listaCategorias = this.categorias.buscarCategoriasRenda();
+    console.log(this.listaCategorias)
   }
 
   receberDados(dados: Transacao) {
     this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarRenda(dados);
     localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
-
 }

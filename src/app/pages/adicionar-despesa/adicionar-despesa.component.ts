@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Projeto, Transacao } from 'src/app/interfaces/iProjeto';
-import { CategoriasService } from 'src/app/services/categorias.service';
-import { CreatePojectService } from 'src/app/services/projetos.service'
+import { TransacaoComponent } from '../../shared/components/transacao/transacao.component';
+import { Projeto, Transacao } from '../../interfaces/iProjeto';
+import { CreatePojectService } from '../../services/projetos.service';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-adicionar-despesa',
+  standalone: true,
+  imports: [
+    TransacaoComponent
+  ],
   templateUrl: './adicionar-despesa.component.html',
-  styleUrls: ['./adicionar-despesa.component.css']
+  styleUrl: './adicionar-despesa.component.css'
 })
 export class AdicionarDespesaComponent implements OnInit {
 
@@ -31,5 +35,4 @@ export class AdicionarDespesaComponent implements OnInit {
     this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
     localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
-
 }

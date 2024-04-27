@@ -9,7 +9,9 @@ export class CreatePojectService {
   listaProjetos!: Projeto[];
   options!: string[];
 
-  constructor() { }
+  constructor() {
+    this.options = JSON.parse(localStorage.getItem('projetosSelect')!);
+  }
 
   consultarProjetosLocalStorage(): boolean {
     return (!!localStorage.getItem('projetos'));
@@ -35,9 +37,13 @@ export class CreatePojectService {
   }
 
   criarNovosProjetos(nomeProjeto: string, saldoInicial: number): void {
+    
+    console.log(this.listaProjetos)
     const projeto: Projeto = new Projeto(nomeProjeto, saldoInicial, [], []);
     this.listaProjetos.push(projeto);
+    console.log(projeto)
     this.options.push(nomeProjeto);
+    localStorage.setItem('ultimoProjeto', nomeProjeto);
     localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
     localStorage.setItem('projetosSelect', JSON.stringify(this.options));
   }
@@ -104,10 +110,12 @@ export class CreatePojectService {
     const projeto: Projeto = this.listaProjetos.find(projeto => projeto.nome === nomeProjeto)!;
     projeto.nome = nomeEditado;
     projeto.saldoInicial = saldoEditado;
-    localStorage.setItem('ultimoProjeto', nomeEditado);
-    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
-    const index: number = this.options.findIndex(i => i === nomeProjeto);
+    const index: number = this.options.findIndex(i => i == nomeProjeto);
     this.options[index] = nomeEditado;
     localStorage.setItem('projetosSelect', JSON.stringify(this.options));
+    localStorage.setItem('ultimoProjeto', nomeEditado);
+    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
 }
+
+//i === nomeProjeto
