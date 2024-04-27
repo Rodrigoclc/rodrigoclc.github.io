@@ -1,0 +1,11 @@
+{
+  "hosting": [
+    {
+      "target": "v2-bootstrap",
+      "source": ".",
+      "frameworksBackend": {
+        "region": "us-central1"
+      }
+    }
+  ]
+}

@@ -1,67 +1,16 @@
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-h1 {
-    display: flex;
-    justify-content: center;
-}
 
 body {
     background-color: #82928d;
-    max-width: 30rem;
     margin: auto;
     border-radius: .5rem;
-    padding: .5rem;
-    height: 95vh;
-}
-
-p {
-    color: white;
-}
-
-select {
-    display: flex;
-    margin: auto;
-    width: 95%;
-}        
-
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    margin: auto;
-}
-
-.miniContainer {
-    margin-top: .75rem;
-    display: flex;
-    justify-content: space-around;
-}
-
-.cards {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid black;
-    background-color: #2e404d;
-    width: 45%;
-    height: 90px;
-    border-radius: .5rem;
-    cursor: pointer;
+    height: 92vh;
 }
 
 .divmaeresultado {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: auto;
-    margin-top: 1rem;
-    padding: .50rem;
-    background-color: #eeebe6;
-    border-radius: .5rem;
     width: 90%;
 }
 
@@ -75,5 +24,11 @@ select {
 .divResultadoValor {
     display: flex;
     flex-direction: column;
+}
+
+.corBotao {
+    background-color: #ffffff;
+    color: black;
+    border-radius: 1rem;
 }
 

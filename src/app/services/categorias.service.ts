@@ -65,8 +65,8 @@ export class CategoriasService {
     }
   }
 
-  adicionarCategoria(categoria: string, novaCategoria: string): void {
-    if(categoria === 'renda') {
+  adicionarCategoria(rendaDespesa: string, novaCategoria: string): void {
+    if(rendaDespesa === 'renda') {
       this.categoriasRenda.push(novaCategoria);      
       localStorage.setItem('categoriasRenda', JSON.stringify(this.categoriasRenda));
     } else {

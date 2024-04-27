@@ -1,0 +1,10 @@
+{
+  "routes": [
+    "/",
+    "/adicionar-despesa",
+    "/adicionar-renda",
+    "/editar-cateforias",
+    "/editar-projetos",
+    "/login"
+  ]
+}
