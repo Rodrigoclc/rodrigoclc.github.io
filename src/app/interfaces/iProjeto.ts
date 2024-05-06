@@ -72,4 +72,9 @@ export class Transacao {
     email: string,
     senha: string
   } 
+
+  export interface RetornoTransacao {
+    chave: string,
+    transacao: object
+  }
   

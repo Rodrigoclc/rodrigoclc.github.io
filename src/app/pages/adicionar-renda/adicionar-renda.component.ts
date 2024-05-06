@@ -3,6 +3,7 @@ import { TransacaoComponent } from '../../shared/components/transacao/transacao.
 import { CreatePojectService } from '../../services/projetos.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { Projeto, Transacao } from '../../interfaces/iProjeto';
+import { CrudService } from '../../services/crud.service';
 
 @Component({
   selector: 'app-adicionar-renda',
@@ -23,17 +24,20 @@ export class AdicionarRendaComponent {
 
   constructor(
     private projetoSevice: CreatePojectService,
-    private categorias: CategoriasService) { }
+    private categorias: CategoriasService,
+    private crudService: CrudService
+  ) { }
 
   ngOnInit(): void {
     this.ultimoProjeto = this.projetoSevice.buscarUltimoProjetoSelecionado();
     this.listaProjetos = this.projetoSevice.recuperarProjetos();
     this.listaCategorias = this.categorias.buscarCategoriasRenda();
-    console.log(this.listaCategorias)
   }
 
   receberDados(dados: Transacao) {
-    this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarRenda(dados);
-    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
+    this.crudService.adicionarTransacao('renda', dados);
+    // this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarRenda(dados);
+    // localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
+
 }

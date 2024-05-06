@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { CreatePojectService } from '../../services/projetos.service';
-import { Projeto, Transacao } from '../../interfaces/iProjeto';
+import { Projeto, RetornoTransacao, Transacao } from '../../interfaces/iProjeto';
 import { RouterLink } from '@angular/router';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared/components/header/header.component'
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { EditarProjetosComponent } from '../../pages/editar-projetos/editar-projetos.component'
 import { AuthService } from '../../services/auth.service';
 import { RendaDespesaComponent } from '../../shared/components/renda-despesa/renda-despesa.component';
+import { CrudService } from '../../services/crud.service';
 
 
 @Component({
@@ -42,19 +43,24 @@ export class HomeComponent implements OnInit {
   corBotao: boolean = true;
 
 
-  constructor(private createPojectService: CreatePojectService, private categoriasService: CategoriasService, private authService: AuthService) { }
+  constructor(
+    private createPojectService: CreatePojectService,
+    private categoriasService: CategoriasService,
+    private authService: AuthService,
+    private crudService: CrudService
+  ) { }
 
   ngOnInit(): void {
 
     this.carregarProjetos(this.createPojectService.consultarProjetosLocalStorage())
-    this.primeirosOptions  = ((localStorage.getItem('projetosSelect'))?.slice(2, -2))!.split('","');
+    this.primeirosOptions = ((localStorage.getItem('projetosSelect'))?.slice(2, -2))!.split('","');
     this.opcaoSelecionada = this.createPojectService.buscarUltimoProjetoSelecionado();
     this.listaCategorias = this.categoriasService.buscarCategoriasRenda();
     this.mostrarResultados();
   }
 
   carregarProjetos(teste: boolean): void {
-    if(teste === false) {
+    if (teste === false) {
       this.listaProjetos = this.createPojectService.criarProjetosDefault();
     } else {
       this.listaProjetos = this.createPojectService.recuperarProjetos();
@@ -77,9 +83,27 @@ export class HomeComponent implements OnInit {
 
   //resolver o problema desse if pra não repetir o codigo.
   mostrarValoresPorCategoria(rendaDespesa: string): void {
+
+    const lista: RetornoTransacao[] = [];
+    this.crudService.getAllRendas(rendaDespesa).snapshotChanges().subscribe((data) => {
+
+      
+      data.forEach((item) => {
+        let transacao: object = item.payload.toJSON()!;
+        let chave: string = item.key!
+        let objeto = {
+          chave: chave,
+          transacao
+        }
+        lista.push(objeto);        
+      });
+      
+    });
+    console.log(lista);
+
     const projeto: Projeto = (this.listaProjetos.find(objeto => objeto.nome == this.opcaoSelecionada))!;
     const listaCategoriasAgrupadas: Transacao[] = [];
-    if(rendaDespesa === 'renda') {
+    if (rendaDespesa === 'renda') {
       this.corBotao = true;
       const categoriasAgrupadas = projeto['renda'].reduce((agrupado: any, item: any) => {
         const { categoria, valor } = item;
@@ -88,9 +112,9 @@ export class HomeComponent implements OnInit {
         }
         agrupado[categoria].valor += valor;
         return agrupado;
-      }, {});  
-      
-      for(let item in categoriasAgrupadas) {
+      }, {});
+
+      for (let item in categoriasAgrupadas) {
         listaCategoriasAgrupadas.push(categoriasAgrupadas[item]);
       }
     } else {
@@ -102,13 +126,15 @@ export class HomeComponent implements OnInit {
         }
         agrupado[categoria].valor += valor;
         return agrupado;
-      }, {});  
-      
-      for(let item in categoriasAgrupadas) {
+      }, {});
+
+      for (let item in categoriasAgrupadas) {
         listaCategoriasAgrupadas.push(categoriasAgrupadas[item]);
       }
     }
-    
+
     this.detalhesPorCategoria = listaCategoriasAgrupadas;
+
+
   }
 }

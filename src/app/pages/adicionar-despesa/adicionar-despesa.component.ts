@@ -3,6 +3,7 @@ import { TransacaoComponent } from '../../shared/components/transacao/transacao.
 import { Projeto, Transacao } from '../../interfaces/iProjeto';
 import { CreatePojectService } from '../../services/projetos.service';
 import { CategoriasService } from '../../services/categorias.service';
+import { CrudService } from '../../services/crud.service';
 
 @Component({
   selector: 'app-adicionar-despesa',
@@ -23,7 +24,9 @@ export class AdicionarDespesaComponent implements OnInit {
 
   constructor(
     private projetosService: CreatePojectService, 
-    private categorias: CategoriasService) { }
+    private categorias: CategoriasService,
+    private crudService: CrudService
+  ) { }
 
   ngOnInit(): void {
     this.ultimoProjeto = this.projetosService.buscarUltimoProjetoSelecionado();
@@ -32,7 +35,9 @@ export class AdicionarDespesaComponent implements OnInit {
   }
 
   receberDados(dados: Transacao) {
-    this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
-    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
+    this.crudService.adicionarTransacao('despesa', dados);
+
+    // this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
+    // localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
 }
