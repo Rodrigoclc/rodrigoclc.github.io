@@ -48,4 +48,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  googleSignIn() {
+    this.authService.googleSignin().then((retorno) => {
+      console.log(retorno);
+    });
+  }
+
 }

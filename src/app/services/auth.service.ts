@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { UserLogin } from '../interfaces/iProjeto'
+import firebase from 'firebase/compat/app'
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -21,20 +21,37 @@ export class AuthService {
 
   async login(email: string, senha: string): Promise<any> {
     try {
+
       const credencial = await this.auth.signInWithEmailAndPassword(email, senha);
-
       this.user = credencial.user!.multiFactor;
-
       this.setUserSubject(this.user);
-
       this.router.navigate(['/']);
-
       return credencial.user!.multiFactor;
             
     } catch (error) {
       this.erro = error;
       return error;
     }
+  }
+
+  async googleSignin(): Promise<any> {
+    try {
+      
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const credential = await this.auth.signInWithPopup(provider);
+      this.user = credential.user;
+      this.router.navigate(['/']);
+      return credential.user!.multiFactor;
+
+    } catch (error) {
+      this.erro = error;
+      return error;
+    }
+  }
+
+  async signOut() {
+    await this.auth.signOut();
+    this.user = null;
   }
 
   private setUserSubject(user: any) {

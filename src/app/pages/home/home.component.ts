@@ -135,6 +135,5 @@ export class HomeComponent implements OnInit {
 
     this.detalhesPorCategoria = listaCategoriasAgrupadas;
 
-
   }
 }
