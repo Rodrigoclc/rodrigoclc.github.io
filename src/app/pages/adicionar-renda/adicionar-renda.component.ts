@@ -36,8 +36,8 @@ export class AdicionarRendaComponent {
 
   receberDados(dados: Transacao) {
     this.crudService.adicionarTransacao('renda', dados);
-    // this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarRenda(dados);
-    // localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
+    this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarRenda(dados);
+    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
 
 }

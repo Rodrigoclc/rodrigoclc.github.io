@@ -37,7 +37,7 @@ export class AdicionarDespesaComponent implements OnInit {
   receberDados(dados: Transacao) {
     this.crudService.adicionarTransacao('despesa', dados);
 
-    // this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
-    // localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
+    this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
+    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
   }
 }
