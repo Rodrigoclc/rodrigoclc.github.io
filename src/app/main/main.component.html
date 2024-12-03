@@ -1,9 +1,13 @@
 <mat-tab-group headerPosition="below">
     <mat-tab label="Home" >
-        <app-home></app-home>
+        <app-home [transacoes]="resultado" 
+        [detalhesPorCategoria]="detalhesPorCategoria"
+        [opcaoSelecionada]="opcaoSelecionada"
+        ></app-home>
     </mat-tab>
     <mat-tab label="Relatórios">
-        <app-home></app-home>
+        <app-relatorios [detalhesPorCategoria]="detalhesPorCategoria"
+        ></app-relatorios>
     </mat-tab>
     <mat-tab label="Opções">
         <app-configuracoes></app-configuracoes>

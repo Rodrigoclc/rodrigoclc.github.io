@@ -11,23 +11,25 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideServiceWorker } from '@angular/service-worker';
+import { Firestore } from '@angular/fire/firestore';
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(routes),
-    provideClientHydration(),
-    provideAnimationsAsync(),
-    provideAnimationsAsync(),
-    importProvidersFrom([
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireAuthModule,
-        AngularFireDatabaseModule,
-        AngularFirestoreModule
-    ]),
-    provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
-    })
-]
+    providers: [
+        provideRouter(routes),
+        provideClientHydration(),
+        provideAnimationsAsync(),
+        provideAnimationsAsync(),
+        importProvidersFrom([
+            AngularFireModule.initializeApp(environment.firebaseConfig),
+            AngularFireAuthModule,
+            AngularFireDatabaseModule,
+            AngularFirestoreModule,
+            Firestore
+        ]),
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        })
+    ]
 };

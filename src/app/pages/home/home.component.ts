@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, input, Input, InputSignal, OnInit } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { CreatePojectService } from '../../services/projetos.service';
 import { Projeto, RetornoTransacao, Transacao } from '../../interfaces/iProjeto';
@@ -11,7 +11,21 @@ import { EditarProjetosComponent } from '../../pages/editar-projetos/editar-proj
 import { AuthService } from '../../services/auth.service';
 import { RendaDespesaComponent } from '../../shared/components/renda-despesa/renda-despesa.component';
 import { CrudService } from '../../services/crud.service';
+import { FirebaseService } from '../../services/firebase.service';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { ITransacao } from '../../interfaces/ITransacao';
 
+interface IResultado {
+  totalEntrada: number;
+  totalSaida: number;
+  saldo: number;
+  projetos: string[];
+  categorias: string[];
+}
+interface IValorPorCategoria {
+  categoria: string,
+  valor: number
+}
 
 @Component({
   selector: 'app-home',
@@ -23,117 +37,39 @@ import { CrudService } from '../../services/crud.service';
     HeaderComponent,
     CommonModule,
     EditarProjetosComponent,
-    RendaDespesaComponent
+    RendaDespesaComponent,
+    SpinnerComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent{
   primeirosOptions!: string[];
-  opcaoSelecionada!: string;
   despesaRenda: string = 'Despesa';
   saldoInicial!: number;
   renda!: number;
   despesa!: number;
   saldoFinal!: number;
   listaCategorias!: string[];
-  detalhesPorCategoria: Transacao[] = [];
   listaProjetos!: Projeto[];
   teste: number = 100;
   corBotao: boolean = true;
 
-
-  constructor(
-    private createPojectService: CreatePojectService,
-    private categoriasService: CategoriasService,
-    private authService: AuthService,
-    private crudService: CrudService
-  ) { }
-
-  ngOnInit(): void {
-
-    this.carregarProjetos(this.createPojectService.consultarProjetosLocalStorage())
-    this.primeirosOptions = ((localStorage.getItem('projetosSelect'))?.slice(2, -2))!.split('","');
-    this.opcaoSelecionada = this.createPojectService.buscarUltimoProjetoSelecionado();
-    this.listaCategorias = this.categoriasService.buscarCategoriasRenda();
-    this.mostrarResultados();
-  }
-
-  carregarProjetos(teste: boolean): void {
-    if (teste === false) {
-      this.listaProjetos = this.createPojectService.criarProjetosDefault();
-    } else {
-      this.listaProjetos = this.createPojectService.recuperarProjetos();
-    }
-  }
+  opcaoSelecionada = input<string>();
+  detalhesPorCategoria = input<ITransacao[]>();
+  transacoes = input<IResultado>();
+  firebaseService: FirebaseService = inject(FirebaseService);
+  skeletonLoading: boolean = true;
+  resultado: IResultado = {
+    totalEntrada: 0,
+    totalSaida: 0,
+    saldo: 0,
+    projetos: [],
+    categorias: []
+  };
 
   salvarProjetoSelecionado() {
-    localStorage.setItem('ultimoProjeto', this.opcaoSelecionada);
-    this.mostrarResultados();
-  }
-
-  mostrarResultados() {
-    const projeto = (this.listaProjetos.find(objeto => objeto.nome == this.opcaoSelecionada));
-    this.saldoInicial = (projeto!.mostrarSaldoinicial());
-    this.renda = (projeto!.mostrarTotalRenda());
-    this.despesa = (projeto!.mostrarTotalDespesa());
-    this.saldoFinal = (projeto!.calcularSaldoAtual());
-    this.mostrarValoresPorCategoria('renda');
-  }
-
-  //resolver o problema desse if pra não repetir o codigo.
-  mostrarValoresPorCategoria(rendaDespesa: string): void {
-
-    const lista: RetornoTransacao[] = [];
-    this.crudService.getAllRendas(rendaDespesa).snapshotChanges().subscribe((data) => {
-
-      
-      data.forEach((item) => {
-        let transacao: object = item.payload.toJSON()!;
-        let chave: string = item.key!
-        let objeto = {
-          chave: chave,
-          transacao
-        }
-        lista.push(objeto);        
-      });
-      
-    });
-    console.log(lista);
-
-    const projeto: Projeto = (this.listaProjetos.find(objeto => objeto.nome == this.opcaoSelecionada))!;
-    const listaCategoriasAgrupadas: Transacao[] = [];
-    if (rendaDespesa === 'renda') {
-      this.corBotao = true;
-      const categoriasAgrupadas = projeto['renda'].reduce((agrupado: any, item: any) => {
-        const { categoria, valor } = item;
-        if (!agrupado[categoria]) {
-          agrupado[categoria] = { categoria, valor: 0 };
-        }
-        agrupado[categoria].valor += valor;
-        return agrupado;
-      }, {});
-
-      for (let item in categoriasAgrupadas) {
-        listaCategoriasAgrupadas.push(categoriasAgrupadas[item]);
-      }
-    } else {
-      this.corBotao = false;
-      const categoriasAgrupadas = projeto['despesa'].reduce((agrupado: any, item: any) => {
-        const { categoria, valor } = item;
-        if (!agrupado[categoria]) {
-          agrupado[categoria] = { categoria, valor: 0 };
-        }
-        agrupado[categoria].valor += valor;
-        return agrupado;
-      }, {});
-
-      for (let item in categoriasAgrupadas) {
-        listaCategoriasAgrupadas.push(categoriasAgrupadas[item]);
-      }
-    }
-
-    this.detalhesPorCategoria = listaCategoriasAgrupadas;
 
   }
+
 }
