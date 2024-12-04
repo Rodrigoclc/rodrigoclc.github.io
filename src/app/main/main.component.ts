@@ -104,9 +104,11 @@ export class MainComponent implements OnInit{
       agrupado[categoria].valor += valor;
       return agrupado;
     }, {});
+    const arrayDeCategorias: ITransacao[] = [];
     for (let item in categoriasAgrupadas) {
-      this.detalhesPorCategoria.push(categoriasAgrupadas[item]);
+      arrayDeCategorias.push(categoriasAgrupadas[item]);
     }
+    this.detalhesPorCategoria = arrayDeCategorias;
     console.log(this.detalhesPorCategoria);
   }
 }
