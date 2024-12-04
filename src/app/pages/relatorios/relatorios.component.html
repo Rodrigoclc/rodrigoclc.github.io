@@ -8,17 +8,17 @@
             <ul style="margin-bottom: 1.5rem;background-color: #f7f9fa;border-radius: 1rem;padding: .25rem;"
                 class="nav nav-justified">
                 <li class="nav-item">
-                    <a [class.corBotao]="corBotao" class="nav-link active" (click)="mudarCategorias()">
+                    <a [class.corBotao]="corBotao" class="nav-link active" (click)="mudarCategorias('entrada')">
                         Renda
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a [class.corBotao]="!corBotao" class="nav-link" (click)="mudarCategorias()">
+                    <a [class.corBotao]="!corBotao" class="nav-link" (click)="mudarCategorias('saída')">
                         Despesa
                     </a>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent"  style="height: 300px; overflow-y: scroll;">
+            <div class="tab-content" id="myTabContent"  style="max-height: 300px; overflow-y: scroll;">
                 <ul class="list-group">
                     @for (item of detalhesPorCategoria(); track $index){
                     <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">

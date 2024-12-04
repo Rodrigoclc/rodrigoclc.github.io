@@ -1,8 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { MenuComponent } from '../shared/components/menu/menu.component';
-import { HeaderComponent } from '../shared/components/header/header.component';
-import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from '../shared/components/footer/footer.component';
+import { Component, inject } from '@angular/core';
 import { MaterialModule } from '../material/material.module';
 import { HomeComponent } from '../pages/home/home.component';
 import { ConfiguracoesComponent } from '../pages/configuracoes/configuracoes.component'
@@ -14,10 +10,6 @@ import { RelatoriosComponent } from '../pages/relatorios/relatorios.component';
   selector: 'app-main',
   standalone: true,
   imports: [
-    RouterOutlet,
-    MenuComponent,
-    HeaderComponent,
-    FooterComponent,
     MaterialModule,
     HomeComponent,
     ConfiguracoesComponent,
@@ -26,12 +18,12 @@ import { RelatoriosComponent } from '../pages/relatorios/relatorios.component';
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
-export class MainComponent implements OnInit{
- 
+export class MainComponent {
+
   private firebaseService: FirebaseService = inject(FirebaseService);
   detalhesPorCategoria: IValorPorCategoria[] = [];
-  dadosEnviados: ITransacao[] = [];
   opcaoSelecionada: string = '';
+  transacoes: ITransacao[] = [];
   resultado: IResultado = {
     totalEntrada: 0,
     totalSaida: 0,
@@ -40,43 +32,40 @@ export class MainComponent implements OnInit{
     categorias: []
   }
 
-  @Output() totalPorCategoria = new EventEmitter<number>();
-
   constructor() {
-    this.buscarTransacoes();  
-  }
-  ngOnInit(): void {
+    this.buscarTransacoes();
   }
 
-  teste() {
-    this.totalPorCategoria.emit();
+  receberDados(entradaSaida: string) {
+    this.mostrarValoresPorCategoria(entradaSaida)
   }
 
   buscarTransacoes(): void {
     this.firebaseService.getItems('556193276567@c.us').subscribe(items => {
-      this.separarDados(items);
+      this.transacoes = items;
+      this.separarDados();
     });
   }
 
-  separarDados(transacoes: ITransacao[]) {
-    const resultado = transacoes.reduce((acumulador: IResultado, transacao: ITransacao) => {
+  separarDados() {
+    const resultado = this.transacoes.reduce((acumulador: IResultado, transacao: ITransacao) => {
       // Atualiza o total de entrada e saída
       if (transacao.tipo === 'entrada') {
         acumulador.totalEntrada += transacao.valor;
       } else if (transacao.tipo === 'saída') {
         acumulador.totalSaida += transacao.valor;
       }
-    
+
       // Adiciona os projetos únicos
       if (!acumulador.projetos.includes(transacao.projeto)) {
         acumulador.projetos.push(transacao.projeto);
       }
-    
+
       // Adiciona as categorias únicas
       if (!acumulador.categorias.includes(transacao.categoria)) {
         acumulador.categorias.push(transacao.categoria);
       }
-    
+
       return acumulador;
     }, {
       totalEntrada: 0,
@@ -85,31 +74,32 @@ export class MainComponent implements OnInit{
       projetos: [] as string[],
       categorias: [] as string[]
     });
-    
-    
+
+
     // Calcula o saldo
     resultado.saldo = resultado.totalEntrada - resultado.totalSaida;
     //console.log(resultado);
     this.resultado = resultado;
     this.opcaoSelecionada = resultado.categorias[0];
-    this.mostrarValoresPorCategoria(transacoes);
+    this.mostrarValoresPorCategoria('entrada');
   }
 
-  mostrarValoresPorCategoria(transacoes: ITransacao[]) {
-    const categoriasAgrupadas: IValorPorCategoria[] = transacoes.reduce((agrupado: any, transacao: ITransacao) => {
-      const { categoria, valor } = transacao;
-      if (!agrupado[categoria]) {
-        agrupado[categoria] = { categoria, valor: 0 };
+  mostrarValoresPorCategoria(entradaSaida: string) {
+    const categoriasAgrupadas: IValorPorCategoria[] = this.transacoes.reduce((agrupado: any, transacao: ITransacao) => {
+      if (transacao.tipo == entradaSaida) {
+        const { categoria, valor } = transacao;
+        if (!agrupado[categoria]) {
+          agrupado[categoria] = { categoria, valor: 0 };
+        }
+        agrupado[categoria].valor += valor;        
       }
-      agrupado[categoria].valor += valor;
       return agrupado;
     }, {});
     const arrayDeCategorias: IValorPorCategoria[] = [];
     for (let item in categoriasAgrupadas) {
-      categoriasAgrupadas[item].media = (categoriasAgrupadas[item].valor / this.resultado.totalSaida)  * 100;
+      categoriasAgrupadas[item].media = (categoriasAgrupadas[item].valor / this.resultado.totalSaida) * 100;
       arrayDeCategorias.push(categoriasAgrupadas[item]);
     }
     this.detalhesPorCategoria = arrayDeCategorias;
-    console.log(this.detalhesPorCategoria);
   }
 }

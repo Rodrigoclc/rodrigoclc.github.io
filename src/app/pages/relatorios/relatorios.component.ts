@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { IResultado, ITransacao, IValorPorCategoria } from '../../interfaces/ITransacao';
@@ -16,10 +16,11 @@ import { IResultado, ITransacao, IValorPorCategoria } from '../../interfaces/ITr
 export class RelatoriosComponent {
 
   detalhesPorCategoria = input<IValorPorCategoria[]>();
-  resultado: number = 0;
-  corBotao: boolean = false;
+  corBotao: boolean = true;
+  @Output() categoriasDeEntradaOuSaida = new EventEmitter<string>();
 
-  mudarCategorias() {
-    this.corBotao = !this.corBotao;  
+  mudarCategorias(entradaSaida: string) {
+    this.categoriasDeEntradaOuSaida.emit(entradaSaida);
+    this.corBotao = !this.corBotao;
   }
 }
