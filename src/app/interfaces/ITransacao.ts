@@ -17,4 +17,5 @@ export interface IResultado {
 export interface IValorPorCategoria {
     categoria: string,
     valor: number
+    media: number
 }

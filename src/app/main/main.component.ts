@@ -7,7 +7,7 @@ import { MaterialModule } from '../material/material.module';
 import { HomeComponent } from '../pages/home/home.component';
 import { ConfiguracoesComponent } from '../pages/configuracoes/configuracoes.component'
 import { FirebaseService } from '../services/firebase.service';
-import { IResultado, ITransacao } from '../interfaces/ITransacao';
+import { IResultado, ITransacao, IValorPorCategoria } from '../interfaces/ITransacao';
 import { RelatoriosComponent } from '../pages/relatorios/relatorios.component';
 
 @Component({
@@ -29,7 +29,7 @@ import { RelatoriosComponent } from '../pages/relatorios/relatorios.component';
 export class MainComponent implements OnInit{
  
   private firebaseService: FirebaseService = inject(FirebaseService);
-  detalhesPorCategoria: ITransacao[] = [];
+  detalhesPorCategoria: IValorPorCategoria[] = [];
   dadosEnviados: ITransacao[] = [];
   opcaoSelecionada: string = '';
   resultado: IResultado = {
@@ -89,14 +89,14 @@ export class MainComponent implements OnInit{
     
     // Calcula o saldo
     resultado.saldo = resultado.totalEntrada - resultado.totalSaida;
-    console.log(resultado);
+    //console.log(resultado);
     this.resultado = resultado;
     this.opcaoSelecionada = resultado.categorias[0];
     this.mostrarValoresPorCategoria(transacoes);
   }
 
   mostrarValoresPorCategoria(transacoes: ITransacao[]) {
-    const categoriasAgrupadas = transacoes.reduce((agrupado: any, transacao: ITransacao) => {
+    const categoriasAgrupadas: IValorPorCategoria[] = transacoes.reduce((agrupado: any, transacao: ITransacao) => {
       const { categoria, valor } = transacao;
       if (!agrupado[categoria]) {
         agrupado[categoria] = { categoria, valor: 0 };
@@ -104,8 +104,9 @@ export class MainComponent implements OnInit{
       agrupado[categoria].valor += valor;
       return agrupado;
     }, {});
-    const arrayDeCategorias: ITransacao[] = [];
+    const arrayDeCategorias: IValorPorCategoria[] = [];
     for (let item in categoriasAgrupadas) {
+      categoriasAgrupadas[item].media = (categoriasAgrupadas[item].valor / this.resultado.totalSaida)  * 100;
       arrayDeCategorias.push(categoriasAgrupadas[item]);
     }
     this.detalhesPorCategoria = arrayDeCategorias;

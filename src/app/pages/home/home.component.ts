@@ -56,7 +56,7 @@ export class HomeComponent{
   corBotao: boolean = true;
 
   opcaoSelecionada = input<string>();
-  detalhesPorCategoria = input<ITransacao[]>();
+  detalhesPorCategoria = input<IValorPorCategoria[]>();
   transacoes = input<IResultado>();
   firebaseService: FirebaseService = inject(FirebaseService);
   skeletonLoading: boolean = true;
