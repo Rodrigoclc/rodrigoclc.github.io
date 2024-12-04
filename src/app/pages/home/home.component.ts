@@ -1,19 +1,11 @@
-import { Component, inject, input, Input, InputSignal, OnInit } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
-import { CreatePojectService } from '../../services/projetos.service';
-import { Projeto, RetornoTransacao, Transacao } from '../../interfaces/iProjeto';
+import { Projeto} from '../../interfaces/iProjeto';
 import { RouterLink } from '@angular/router';
-import { FormGroup, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared/components/header/header.component'
-import { CategoriasService } from '../../services/categorias.service';
 import { CommonModule } from '@angular/common';
-import { EditarProjetosComponent } from '../../pages/editar-projetos/editar-projetos.component'
-import { AuthService } from '../../services/auth.service';
-import { RendaDespesaComponent } from '../../shared/components/renda-despesa/renda-despesa.component';
-import { CrudService } from '../../services/crud.service';
 import { FirebaseService } from '../../services/firebase.service';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { ITransacao } from '../../interfaces/ITransacao';
 
 interface IResultado {
   totalEntrada: number;
@@ -36,9 +28,6 @@ interface IValorPorCategoria {
     FormsModule,
     HeaderComponent,
     CommonModule,
-    EditarProjetosComponent,
-    RendaDespesaComponent,
-    SpinnerComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

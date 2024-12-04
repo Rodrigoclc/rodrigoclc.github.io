@@ -43,6 +43,7 @@ export class MainComponent {
   buscarTransacoes(): void {
     this.firebaseService.getItems('556193276567@c.us').subscribe(items => {
       this.transacoes = items;
+      localStorage.setItem('transacoes', JSON.stringify(items));
       this.separarDados();
     });
   }
@@ -80,7 +81,8 @@ export class MainComponent {
     resultado.saldo = resultado.totalEntrada - resultado.totalSaida;
     //console.log(resultado);
     this.resultado = resultado;
-    this.opcaoSelecionada = resultado.categorias[0];
+    localStorage.setItem('ultimoProjeto', resultado.projetos[0]);
+    this.opcaoSelecionada = resultado.projetos[0];
     this.mostrarValoresPorCategoria('entrada');
   }
 

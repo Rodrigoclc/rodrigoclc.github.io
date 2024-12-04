@@ -7,7 +7,7 @@
             <div class="row mt-4">
                 <div class="form-group">
                     <label for="example-search-input" class="form-control-label">&nbsp;</label>
-                    <select class="form-control" [value]="opcaoSelecionada()" (change)="salvarProjetoSelecionado()">
+                    <select class="form-control" (change)="salvarProjetoSelecionado()">
                         @for (opcao of transacoes()?.projetos; track opcao) {
                         <option [value]="opcao">{{ opcao }}</option>
                         }

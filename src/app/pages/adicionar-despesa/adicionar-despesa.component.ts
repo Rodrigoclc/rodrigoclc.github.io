@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TransacaoComponent } from '../../shared/components/transacao/transacao.component';
 import { Projeto, Transacao } from '../../interfaces/iProjeto';
 import { CreatePojectService } from '../../services/projetos.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { CrudService } from '../../services/crud.service';
+import { ICategorias, IResultado, ITransacao } from '../../interfaces/ITransacao';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-adicionar-despesa',
@@ -16,28 +18,49 @@ import { CrudService } from '../../services/crud.service';
 })
 export class AdicionarDespesaComponent implements OnInit {
 
+  firebaseService: FirebaseService = inject(FirebaseService);
+
   tituloHeader: string = 'Adicionar despesa'
-
-  listaProjetos!: Projeto[];
+  listaProjetos: Projeto[] = [];
   ultimoProjeto!: string;
-  listaCategorias!: string[];
+  listaCategorias: string[] = [];
+  transacoes: ITransacao[] = [];
+  resultado: ICategorias = { categorias: [] }
 
-  constructor(
-    private projetosService: CreatePojectService, 
-    private categorias: CategoriasService,
-    private crudService: CrudService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.ultimoProjeto = this.projetosService.buscarUltimoProjetoSelecionado();
-    this.listaProjetos = this.projetosService.recuperarProjetos();
-    this.listaCategorias = this.categorias.buscarCategoriasDespesa();
+    this.ultimoProjeto = localStorage.getItem('ultimoProjeto')!;
+
+    this.transacoes = JSON.parse(localStorage.getItem('transacoes')!);
+    this.separarDados();
+  }
+
+  separarDados() {
+    const resultado = this.transacoes.reduce((acumulador: ICategorias, transacao: ITransacao) => {
+      
+      if (!acumulador.categorias.includes(transacao.categoria) && transacao.tipo == 'saída') {
+        acumulador.categorias.push(transacao.categoria);
+      }
+      return acumulador;
+
+    }, { categorias: [] as string[] });
+
+    // Calcula o saldo
+    console.log(resultado);
+    this.listaCategorias = resultado.categorias;
+    this.resultado = resultado;
   }
 
   receberDados(dados: Transacao) {
-    this.crudService.adicionarTransacao('despesa', dados);
-
-    this.listaProjetos.find(objeto => objeto.nome == this.ultimoProjeto)!.adicionarDespesa(dados);
-    localStorage.setItem('projetos', JSON.stringify(this.listaProjetos));
+    const transacao: ITransacao = {
+      categoria: dados.categoria,
+      dataDaTransacao: `${dados.data.replaceAll('-','/')}-${dados.hora}`,
+      descricao: dados.descricao,
+      projeto: this.ultimoProjeto,
+      tipo: 'saída',
+      valor: dados.valor
+    }
+    this.firebaseService.addItem('556193276567@c.us',transacao);
   }
 }

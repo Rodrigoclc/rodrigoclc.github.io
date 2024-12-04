@@ -1,16 +1,19 @@
 <div class="col-lg-9 col-12 mx-auto">
     <form [formGroup]="transacoes" (ngSubmit)="subimtForm()" class="card card-body mt-4">
-    <h1 class="mb-0">{{ titulo }}</h1>
+    <h1 class="mb-0">{{ titulo() }}</h1>
         <hr class="horizontal dark my-3">
+        <label for="example-search-input" class="form-control-label">Valor:</label>
         <input type="number" class="form-control" id="projectName" onfocus="focused(this)" onfocusout="defocused(this)" formControlName="valor">
         <div class="form-group">
-            <label for="example-search-input" class="form-control-label">&nbsp;</label>
+            <label for="example-search-input" class="form-control-label">Categorias:</label>
             <select class="form-control" formControlName="categoria">
-                @for (opcao of categorias; track opcao) {
+                <option disabled value="">--Selecione--</option>
+                @for (opcao of categorias(); track opcao) {
                     <option [value]="opcao">{{ opcao }}</option>
                 }                                            
             </select>
         </div>
+        <label for="example-search-input" class="form-control-label">Descrição:</label>
         <input type="text" class="form-control" id="projectName" onfocus="focused(this)" onfocusout="defocused(this)" formControlName="descricao">
         
         <div class="row">

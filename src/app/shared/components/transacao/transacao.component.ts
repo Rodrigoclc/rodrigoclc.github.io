@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, OnInit, Output, EventEmitter, input, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { Transacao } from '../../../interfaces/iProjeto';
 import { RouterLink } from '@angular/router';
 
@@ -16,27 +16,28 @@ import { RouterLink } from '@angular/router';
 })
 export class TransacaoComponent implements OnInit {
 
+  formBuilder = inject(NonNullableFormBuilder);
   @Output() dadosEnviados = new EventEmitter<Transacao>();
 
-  transacoes!: FormGroup;
+  transacoes = this.formBuilder.group({
+    valor: [0, [Validators.required]],
+    categoria: ['', [Validators.required]],
+    descricao: ['', [Validators.required]],
+    data: [this.obterDataAtualFormatada(), [Validators.required]],
+    hora: [this.obterHoraAtual(), [Validators.required]]
+  });
   select!: string;
 
-  @Input()titulo: string = '';
-  @Input()categorias: string[] = [];
+  titulo = input<string>();
+  categorias = input<string[]>();
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.transacoes = this.formBuilder.group({
-      valor: ['',[Validators.required]],
-      categoria: ['',[Validators.required]],
-      descricao: ['',[Validators.required]],
-      data: [this.obterDataAtualFormatada(),[Validators.required]],
-      hora: [this.obterHoraAtual(),[Validators.required]]
-    })
+    console.log('iniciado transacao component');
   }
 
-   private obterHoraAtual(): string {
+  private obterHoraAtual(): string {
     const agora = new Date();
     const hora = agora.getHours()
     const minutos = agora.getMinutes()
@@ -56,8 +57,11 @@ export class TransacaoComponent implements OnInit {
   }
 
   subimtForm() {
-    console.log(this.transacoes.value);
-    this.dadosEnviados.emit(this.transacoes.value);
-    this.transacoes.patchValue({valor: '', descricao: ''});
+    //console.log(this.transacoes.value);
+    if (this.transacoes.valid) {
+      this.dadosEnviados.emit(this.transacoes.value as Transacao);
+      this.transacoes.patchValue({ valor: 0, descricao: '', categoria: '' });
+    }
+
   }
 }

@@ -19,3 +19,7 @@ export interface IValorPorCategoria {
     valor: number
     media: number
 }
+
+export interface ICategorias {
+    categorias: string[];
+}
