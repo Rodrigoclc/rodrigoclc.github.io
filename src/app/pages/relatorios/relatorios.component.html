@@ -18,10 +18,12 @@
                     </a>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent"  style="max-height: 300px; overflow-y: scroll;">
+            <div class="tab-content" id="myTabContent" style="max-height: 450px; overflow-y: scroll;">
                 <ul class="list-group">
                     @for (item of detalhesPorCategoria(); track $index){
-                    <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                    <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2" type="button"
+                        data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseOne'+$index" aria-expanded="false"
+                        aria-controls="collapseExample" (click)="separarDados(item.categoria)">
                         <div class="w-100">
                             <div class="d-flex align-items-center mb-2">
                                 <a class="btn btn-slack btn-simple mb-0 p-0" href="javascript:;">
@@ -34,10 +36,35 @@
                             </div>
                             <div>
                                 <div class="progress progress-md">
-                                    <div [style.width.%]="item.media"
-                                        [ngClass]="'w-' + item.media"
+                                    <div [style.width.%]="item.media" [ngClass]="'w-' + item.media"
                                         class="progress-bar bg-gradient-dark" role="progressbar" aria-valuenow="15"
                                         aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <div class="collapse" [id]="'collapseOne'+$index">
+                                <div class="">
+                                    <ul class="list-group list-group-flush">
+                                        @for (transacao of listaTransacoes; track $index) {
+                                        <li class="list-group-item px-0">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto w-100 align-items-center">
+                                                    <div class="d-flex justify-content-end">
+                                                        <p style="margin-bottom: 0;">{{ transacao.dataDaTransacao }}</p>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end">
+                                                        <!-- <p style="margin-bottom: 0;" class="ms-3">Valor:</p> -->
+                                                        <p style="margin-bottom: 0;">R$ {{ transacao.valor }}</p>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">
+                                                        <p style="margin-bottom: 0;">{{ transacao.descricao }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
+                                        }
+
+                                    </ul>
                                 </div>
                             </div>
                         </div>

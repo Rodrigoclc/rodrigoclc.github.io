@@ -55,12 +55,13 @@ export class AdicionarDespesaComponent implements OnInit {
   receberDados(dados: Transacao) {
     const transacao: ITransacao = {
       categoria: dados.categoria,
-      dataDaTransacao: `${dados.data.replaceAll('-','/')}-${dados.hora}`,
+      dataDaTransacao: `${dados.data.replaceAll('-', '/')}-${dados.hora}`,
       descricao: dados.descricao,
       projeto: this.ultimoProjeto,
       tipo: 'saída',
-      valor: dados.valor
+      valor: dados.valor,
     }
-    this.firebaseService.addItem('556193276567@c.us',transacao);
+    const usuario = '556193276567@c.us';
+    this.firebaseService.addItem(`${usuario}-transacoes`,transacao);
   }
 }

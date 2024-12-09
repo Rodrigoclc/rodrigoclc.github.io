@@ -61,7 +61,8 @@ export class AdicionarRendaComponent {
       tipo: 'entrada',
       valor: dados.valor
     }
-    this.firebaseService.addItem('556193276567@c.us',transacao);
+    const usuario = '556193276567@c.us'
+    this.firebaseService.addItem(`${usuario}-transacoes`,transacao);
   }
 
 }

@@ -31,9 +31,11 @@ export class MainComponent {
     projetos: [],
     categorias: []
   }
+  projetos: string[] = [];
 
   constructor() {
     this.buscarTransacoes();
+    this.buscarProjetos();
   }
 
   receberDados(entradaSaida: string) {
@@ -41,9 +43,29 @@ export class MainComponent {
   }
 
   buscarTransacoes(): void {
-    this.firebaseService.getItems('556193276567@c.us').subscribe(items => {
-      this.transacoes = items;
-      localStorage.setItem('transacoes', JSON.stringify(items));
+    const usuario = '556193276567@c.us'
+    this.firebaseService.getTransacoes(`${usuario}`).subscribe(items => {
+      //this.transacoes = items;
+      const listaTransacoes: ITransacao[] = [];
+      items.docChanges().forEach(x => {
+        const chave = x.doc.id;
+        const transacao: ITransacao = x.doc.data();
+        transacao.chave = chave;
+        listaTransacoes.push(transacao);
+      });
+      this.transacoes = listaTransacoes;
+      console.log(this.transacoes);
+      localStorage.setItem('transacoes', JSON.stringify(listaTransacoes));
+      this.separarDados();
+    });
+  }
+
+  buscarProjetos(): void {
+    const usuario = '556193276567@c.us'
+    this.firebaseService.getProjetos(`${usuario}-projetos`).subscribe(items => {
+      this.projetos = items;
+      console.log(items);
+      localStorage.setItem('projetos', JSON.stringify(items));
       this.separarDados();
     });
   }
@@ -93,7 +115,7 @@ export class MainComponent {
         if (!agrupado[categoria]) {
           agrupado[categoria] = { categoria, valor: 0 };
         }
-        agrupado[categoria].valor += valor;        
+        agrupado[categoria].valor += valor;
       }
       return agrupado;
     }, {});
@@ -102,6 +124,7 @@ export class MainComponent {
       categoriasAgrupadas[item].media = (categoriasAgrupadas[item].valor / this.resultado.totalSaida) * 100;
       arrayDeCategorias.push(categoriasAgrupadas[item]);
     }
+    console.log(arrayDeCategorias);
     this.detalhesPorCategoria = arrayDeCategorias;
   }
 }

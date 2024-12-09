@@ -1,4 +1,5 @@
 export interface ITransacao {
+    chave?: string,
     categoria: string,
     dataDaTransacao: string,
     descricao: string,

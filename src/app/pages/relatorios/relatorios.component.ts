@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Component, EventEmitter, input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { IResultado, ITransacao, IValorPorCategoria } from '../../interfaces/ITransacao';
@@ -13,11 +13,28 @@ import { IResultado, ITransacao, IValorPorCategoria } from '../../interfaces/ITr
   templateUrl: './relatorios.component.html',
   styleUrl: './relatorios.component.css'
 })
-export class RelatoriosComponent {
+export class RelatoriosComponent implements OnInit{
 
   detalhesPorCategoria = input<IValorPorCategoria[]>();
   corBotao: boolean = true;
+  transacoesStorage: ITransacao[] = [];
+  listaTransacoes: ITransacao[] = [];
+
   @Output() categoriasDeEntradaOuSaida = new EventEmitter<string>();
+
+  ngOnInit(): void {
+    this.transacoesStorage = JSON.parse(localStorage.getItem('transacoes')!);
+  }
+
+  separarDados(categoria: string) {
+    const listaTransacoes: ITransacao[] = []
+    this.transacoesStorage.forEach(transacao => {
+      if (transacao.categoria == categoria) {
+        listaTransacoes.push(transacao);
+      }
+    });
+    this.listaTransacoes = listaTransacoes;
+  }
 
   mudarCategorias(entradaSaida: string) {
     this.categoriasDeEntradaOuSaida.emit(entradaSaida);

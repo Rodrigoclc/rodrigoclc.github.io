@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, QuerySnapshot } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { ITransacao } from '../interfaces/ITransacao';
 
@@ -22,9 +22,15 @@ export class FirebaseService {
       });
   }
 
-  getItems(collectionName: string): Observable<ITransacao[]> {
+  getTransacoes(collectionName: string): Observable<QuerySnapshot<any>> {
     const collectionRef: AngularFirestoreCollection<any> = this.afs.collection(collectionName);
-    const items$: Observable<ITransacao[]> = collectionRef.valueChanges();
+    const items$: Observable<QuerySnapshot<any>> = collectionRef.get();
+    return items$;
+  }
+
+  getProjetos(collectionName: string): Observable<string[]> {
+    const collectionRef: AngularFirestoreCollection<any> = this.afs.collection(collectionName);
+    const items$: Observable<string[]> = collectionRef.valueChanges();
     return items$;
   }
 }
