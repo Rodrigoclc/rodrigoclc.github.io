@@ -3,7 +3,7 @@ import { MaterialModule } from '../material/material.module';
 import { HomeComponent } from '../pages/home/home.component';
 import { ConfiguracoesComponent } from '../pages/configuracoes/configuracoes.component'
 import { FirebaseService } from '../services/firebase.service';
-import { IResultado, ITransacao, IValorPorCategoria } from '../interfaces/ITransacao';
+import { IProjeto, IResultado, ITransacao, IValorPorCategoria } from '../interfaces/ITransacao';
 import { RelatoriosComponent } from '../pages/relatorios/relatorios.component';
 
 @Component({
@@ -31,7 +31,7 @@ export class MainComponent {
     projetos: [],
     categorias: []
   }
-  projetos: string[] = [];
+  projetos: IProjeto[] = [];
 
   constructor() {
     this.buscarTransacoes();
@@ -44,7 +44,7 @@ export class MainComponent {
 
   buscarTransacoes(): void {
     const usuario = '556193276567@c.us'
-    this.firebaseService.getTransacoes(`${usuario}`).subscribe(items => {
+    this.firebaseService.getItems(`${usuario}-transacoes`).subscribe(items => {
       //this.transacoes = items;
       const listaTransacoes: ITransacao[] = [];
       items.docChanges().forEach(x => {
@@ -54,7 +54,6 @@ export class MainComponent {
         listaTransacoes.push(transacao);
       });
       this.transacoes = listaTransacoes;
-      console.log(this.transacoes);
       localStorage.setItem('transacoes', JSON.stringify(listaTransacoes));
       this.separarDados();
     });
@@ -62,11 +61,17 @@ export class MainComponent {
 
   buscarProjetos(): void {
     const usuario = '556193276567@c.us'
-    this.firebaseService.getProjetos(`${usuario}-projetos`).subscribe(items => {
-      this.projetos = items;
-      console.log(items);
-      localStorage.setItem('projetos', JSON.stringify(items));
-      this.separarDados();
+    this.firebaseService.getItems(`${usuario}-projetos`).subscribe(items => {
+      const listaProjetos: IProjeto[] = [];
+      items.docChanges().forEach(x => {
+        // const chave = x.doc.id;
+        // const transacao: ITransacao = x.doc.data();
+        // transacao.chave = chave;
+        listaProjetos.push(x.doc.data());
+      });
+      this.projetos = listaProjetos;
+      console.log(this.projetos);
+      localStorage.setItem('projetos', JSON.stringify(listaProjetos));
     });
   }
 

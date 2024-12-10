@@ -27,9 +27,9 @@
             <input type="text" class="form-control" id="nome-projeto" onfocus="focused(this)"
                 onfocusout="defocused(this)" [(ngModel)]="novoProjeto">
 
-            <label class="form-label">Saldo inicial</label>
+            <!-- <label class="form-label">Saldo inicial</label>
             <input type="number" class="form-control" id="saldo-inicial" onfocus="focused(this)"
-                onfocusout="defocused(this)" [(ngModel)]="saldoInicialProjeto">
+                onfocusout="defocused(this)" [(ngModel)]="saldoInicialProjeto"> -->
 
             <div class="d-flex justify-content-end mt-4">
                 <button type="button" name="button" class="btn btn-light m-0" data-bs-toggle="collapse"
@@ -56,8 +56,8 @@
                                         type="button" data-bs-toggle="collapse"
                                         [attr.data-bs-target]="'#collapseOne'+$index" aria-expanded="false"
                                         aria-controls="collapseOne">
-                                        <h6 class="mb-0 text-xs">{{ item.nome }}</h6>
-                                    <p class="text-xs text-secondary mb-0">{{ item.calcularSaldoAtual() }}</p>
+                                        <h6 class="mb-0 text-xs">{{ item.projeto }}</h6>
+                                    <!-- <p class="text-xs text-secondary mb-0">{{ item }}</p> -->
                                         <i class="collapse-close fa fa-plus text-xs pt-1 position-absolute end-0 me-3"
                                             aria-hidden="true"></i>
                                         <i class="collapse-open fa fa-minus text-xs pt-1 position-absolute end-0 me-3"
@@ -71,21 +71,21 @@
                                         <input type="text" class="form-control" id="nome-projeto" onfocus="focused(this)"
                                             onfocusout="defocused(this)" [(ngModel)]="novoProjeto">
             
-                                        <label class="form-label">Saldo inicial</label>
+                                        <!-- <label class="form-label">Saldo inicial</label>
                                         <input type="number" class="form-control" id="saldo-inicial" onfocus="focused(this)"
-                                            onfocusout="defocused(this)" [(ngModel)]="saldoInicialProjeto">
+                                            onfocusout="defocused(this)" [(ngModel)]="saldoInicialProjeto"> -->
 
                                         <div class="d-flex justify-content-end mt-4">
                                             <button type="button" name="button" class="btn btn-light m-0"
                                                  
                                                 data-bs-toggle="collapse"
                                                 [attr.data-bs-target]="'#collapseOne'+$index" aria-expanded="false"
-                                                aria-controls="collapseOne" (click)="excluir($index)">Excluir</button>
+                                                aria-controls="collapseOne" (click)="excluir(item)">Excluir</button>
                                             <button type="submit" name="button"
                                                 class="btn bg-gradient-primary m-0 ms-2"
                                                 data-bs-toggle="collapse"
                                                 [attr.data-bs-target]="'#collapseOne'+$index" aria-expanded="false"
-                                                aria-controls="collapseOne" (click)="atualizarProjeto($index)">Salvar</button>
+                                                aria-controls="collapseOne" (click)="atualizarProjeto(item)">Salvar</button>
                                         </div>
                                     </div>
                                 </div>

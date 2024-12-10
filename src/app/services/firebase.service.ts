@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, QuerySnapshot } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
-import { ITransacao } from '../interfaces/ITransacao';
+import { INovaCategoria, IProjeto, ITransacao } from '../interfaces/ITransacao';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
 
-  private afs:AngularFirestore = inject(AngularFirestore);
+  private afs: AngularFirestore = inject(AngularFirestore);
 
-  addItem(collectionName: string, newDocumentData: ITransacao) {
-    this.afs.collection(collectionName).add(newDocumentData)
+  addItem(collectionName: string, newDocumentData: ITransacao | INovaCategoria | IProjeto) {
+    return this.afs.collection(collectionName).add(newDocumentData)
       .then(docRef => {
         console.log('Document added with ID:', docRef.id);
         // Handle success, e.g., display a message
@@ -22,15 +22,31 @@ export class FirebaseService {
       });
   }
 
-  getTransacoes(collectionName: string): Observable<QuerySnapshot<any>> {
-    const collectionRef: AngularFirestoreCollection<any> = this.afs.collection(collectionName);
-    const items$: Observable<QuerySnapshot<any>> = collectionRef.get();
-    return items$;
+  deleteItem(collectionName: string, documentId: string) {
+    const docRef: AngularFirestoreDocument<any> = this.afs.doc(`${collectionName}/${documentId}`);
+    docRef.delete()
+      .then(() => {
+        console.log('Document deleted successfully');
+      })
+      .catch(error => {
+        console.error('Error deleting document:', error);
+      });
   }
 
-  getProjetos(collectionName: string): Observable<string[]> {
+  updateItem(collectionName: string, documentId: string, newDocumentData: any) {
+    const docRef: AngularFirestoreDocument<any> = this.afs.doc(`${collectionName}/${documentId}`);
+    docRef.update(newDocumentData)
+      .then(() => {
+        console.log('Document updated successfully');
+      })
+      .catch(error => {
+        console.error('Error updating document:', error);
+      });
+  }
+
+  getItems(collectionName: string): Observable<QuerySnapshot<any>> {
     const collectionRef: AngularFirestoreCollection<any> = this.afs.collection(collectionName);
-    const items$: Observable<string[]> = collectionRef.valueChanges();
+    const items$: Observable<QuerySnapshot<any>> = collectionRef.get();
     return items$;
   }
 }

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared/components/header/header.component'
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from '../../services/firebase.service';
+import { IProjeto } from '../../interfaces/ITransacao';
 
 interface IResultado {
   totalEntrada: number;
@@ -33,7 +34,6 @@ interface IValorPorCategoria {
   styleUrl: './home.component.css'
 })
 export class HomeComponent{
-  primeirosOptions!: string[];
   despesaRenda: string = 'Despesa';
   saldoInicial!: number;
   renda!: number;
@@ -47,6 +47,7 @@ export class HomeComponent{
   opcaoSelecionada = input<string>();
   detalhesPorCategoria = input<IValorPorCategoria[]>();
   transacoes = input<IResultado>();
+  projetos = input<IProjeto[]>();
   firebaseService: FirebaseService = inject(FirebaseService);
   skeletonLoading: boolean = true;
   resultado: IResultado = {

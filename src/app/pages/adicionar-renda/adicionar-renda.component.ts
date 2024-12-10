@@ -4,7 +4,7 @@ import { CreatePojectService } from '../../services/projetos.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { Projeto, Transacao } from '../../interfaces/iProjeto';
 import { CrudService } from '../../services/crud.service';
-import { ICategorias, ITransacao } from '../../interfaces/ITransacao';
+import { ICategoria, ITransacao } from '../../interfaces/ITransacao';
 import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class AdicionarRendaComponent {
   ultimoProjeto!: string;
   listaCategorias: string[] = [];
   transacoes: ITransacao[] = [];
-  resultado: ICategorias = { categorias: [] }
+  resultado: ICategoria = { categorias: [] }
 
   constructor() { }
 
@@ -37,7 +37,7 @@ export class AdicionarRendaComponent {
   }
 
   separarDados() {
-    const resultado = this.transacoes.reduce((acumulador: ICategorias, transacao: ITransacao) => {
+    const resultado = this.transacoes.reduce((acumulador: ICategoria, transacao: ITransacao) => {
       
       if (!acumulador.categorias.includes(transacao.categoria) && transacao.tipo == 'entrada') {
         acumulador.categorias.push(transacao.categoria);

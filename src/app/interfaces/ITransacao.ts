@@ -21,6 +21,18 @@ export interface IValorPorCategoria {
     media: number
 }
 
-export interface ICategorias {
+export interface ICategoria {
     categorias: string[];
+}
+
+export interface INovaCategoria {
+    chave?: string,
+    projeto: string,
+    tipo: string,
+    categoria: string
+}
+
+export interface IProjeto {
+    chave?: string,
+    projeto: string
 }

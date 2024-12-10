@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CategoriasService } from '../../services/categorias.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FirebaseService } from '../../services/firebase.service';
+import { ICategoria, INovaCategoria } from '../../interfaces/ITransacao';
 
 @Component({
   selector: 'app-editar-categorias',
@@ -16,46 +18,69 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class EditarCategoriasComponent implements OnInit {
 
-  categoriasRenda: string[] = [];
-  categoriasDespesa: string[] = [];
-  listaCategorias: string[] = [];
+  firebaseService: FirebaseService = inject(FirebaseService);
+  listaCategorias: INovaCategoria[] = [];
   inputCategoria: string = '';
-  rendaDespesa!: string;
+  entradaSaida!: string;
   corBotao: boolean = true;
-
-  constructor(private categoriasService: CategoriasService) { }
+  ultimoProjeto: string = '';
+ 
+  constructor() { }
 
   ngOnInit(): void {
-    this.categoriasRenda = this.categoriasService.buscarCategoriasRenda();
-    this.categoriasDespesa = this.categoriasService.buscarCategoriasDespesa();
-    this.listaCategorias = this.categoriasRenda;
-    this.rendaDespesa = 'renda';
-    console.log(this.categoriasDespesa, this.categoriasRenda)
+    this.entradaSaida = 'entrada';
+    this.ultimoProjeto = localStorage.getItem('ultimoProjeto')!;
+    this.buscarCategorias('entrada');
   }
 
-  excluirCategoria(categoria: string) {
-    this.categoriasService.excluirCategoria(this.rendaDespesa, categoria);
+  buscarCategorias(entradaSaida: string): void {
+    const usuario = '556193276567@c.us'
+    this.firebaseService.getItems(`${usuario}-categorias`).subscribe(items => {
+      const listaCategorias: INovaCategoria[] = [];
+      items.docChanges().forEach(x => {
+        const chave = x.doc.id;
+        const categoria: INovaCategoria = x.doc.data();
+        categoria.chave = chave;
+        if (categoria.tipo == entradaSaida)
+          listaCategorias.push(categoria);
+      });
+      this.listaCategorias = listaCategorias;
+    });
   }
 
-  editarCategoria(categoria: string) {
-    this.categoriasService.editarCategorias(this.rendaDespesa, categoria, this.inputCategoria);
+  excluirCategoria(categoria: INovaCategoria) {
+    const usuario = '556193276567@c.us';
+    this.firebaseService.deleteItem(`${usuario}-categorias`, categoria.chave!);
+    this.buscarCategorias(categoria.tipo);
+  }
+
+  editarCategoria(categoria: INovaCategoria) {
+    categoria.categoria = this.inputCategoria;
+    const usuario = '556193276567@c.us';
+    this.firebaseService.updateItem(`${usuario}-categorias`,categoria.chave!, categoria);
     this.inputCategoria = '';
   }
 
-  criarCategoria() {
-    this.categoriasService.adicionarCategoria(this.rendaDespesa, this.inputCategoria);
+  async criarCategoria() {
+    const novaCategoria: INovaCategoria = {
+      projeto: this.ultimoProjeto,
+      tipo: this.entradaSaida,
+      categoria: this.inputCategoria
+    }
+    const usuario = '556193276567@c.us';
+    await this.firebaseService.addItem(`${usuario}-categorias`,novaCategoria);
+    this.buscarCategorias(novaCategoria.tipo);
     this.inputCategoria = '';
   }
 
-  mudarRendaDespesa(rendaDespesa: string) {
-    this.rendaDespesa = rendaDespesa;
-    if(rendaDespesa === 'renda') {
-      this.listaCategorias = this.categoriasRenda;
+  mudarRendaDespesa(entradaSaida: string) {
+    this.entradaSaida = entradaSaida;
+    if(entradaSaida === 'entrada') {
       this.corBotao = true;
     } else {
-      this.listaCategorias = this.categoriasDespesa;
       this.corBotao = false;
     }
+    this.buscarCategorias(entradaSaida);
   }
 
 }
