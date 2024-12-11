@@ -1,8 +1,8 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { MaterialModule } from '../../material/material.module';
 import { Projeto} from '../../interfaces/iProjeto';
 import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared/components/header/header.component'
 import { CommonModule } from '@angular/common';
 import { FirebaseService } from '../../services/firebase.service';
@@ -27,6 +27,7 @@ interface IValorPorCategoria {
     MaterialModule,
     RouterLink,
     FormsModule,
+    ReactiveFormsModule,
     HeaderComponent,
     CommonModule,
   ],
@@ -44,7 +45,9 @@ export class HomeComponent{
   teste: number = 100;
   corBotao: boolean = true;
 
-  opcaoSelecionada = input<string>();
+  private formBuilder: NonNullableFormBuilder = inject(NonNullableFormBuilder);
+  protected form = this.formBuilder.group({projetos: localStorage.getItem('ultimoProjeto')});
+  @Output() projetoSelecionado = new EventEmitter<string>();
   detalhesPorCategoria = input<IValorPorCategoria[]>();
   transacoes = input<IResultado>();
   projetos = input<IProjeto[]>();
@@ -59,7 +62,8 @@ export class HomeComponent{
   };
 
   salvarProjetoSelecionado() {
-
+    this.projetoSelecionado.emit(this.form.value.projetos!);
+    console.log(this.form.value.projetos);
   }
 
 }

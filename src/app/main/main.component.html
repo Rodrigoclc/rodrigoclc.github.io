@@ -3,7 +3,7 @@
         <app-home [transacoes]="resultado"
         [projetos]="projetos" 
         [detalhesPorCategoria]="detalhesPorCategoria"
-        [opcaoSelecionada]="opcaoSelecionada"
+        (projetoSelecionado)="qualProjetoSelecionado($event)"
         ></app-home>
     </mat-tab>
     <mat-tab label="Relatórios">

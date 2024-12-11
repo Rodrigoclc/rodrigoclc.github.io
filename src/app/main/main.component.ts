@@ -22,7 +22,7 @@ export class MainComponent {
 
   private firebaseService: FirebaseService = inject(FirebaseService);
   detalhesPorCategoria: IValorPorCategoria[] = [];
-  opcaoSelecionada: string = '';
+  opcaoSelecionada: string | null = localStorage.getItem('ultimoProjeto');
   transacoes: ITransacao[] = [];
   resultado: IResultado = {
     totalEntrada: 0,
@@ -39,7 +39,7 @@ export class MainComponent {
   }
 
   receberDados(entradaSaida: string) {
-    this.mostrarValoresPorCategoria(entradaSaida)
+    this.mostrarValoresPorCategoria(entradaSaida);
   }
 
   buscarTransacoes(): void {
@@ -75,23 +75,31 @@ export class MainComponent {
     });
   }
 
+  qualProjetoSelecionado(projeto: string) {
+    this.opcaoSelecionada = projeto;
+    localStorage.setItem('ultimoProjeto', this.opcaoSelecionada);
+    this.separarDados();
+  }
+
   separarDados() {
     const resultado = this.transacoes.reduce((acumulador: IResultado, transacao: ITransacao) => {
       // Atualiza o total de entrada e saída
-      if (transacao.tipo === 'entrada') {
-        acumulador.totalEntrada += transacao.valor;
-      } else if (transacao.tipo === 'saída') {
-        acumulador.totalSaida += transacao.valor;
-      }
+      if (transacao.projeto == this.opcaoSelecionada) {
+        if (transacao.tipo === 'entrada') {
+          acumulador.totalEntrada += transacao.valor;
+        } else if (transacao.tipo === 'saída') {
+          acumulador.totalSaida += transacao.valor;
+        }
 
-      // Adiciona os projetos únicos
-      if (!acumulador.projetos.includes(transacao.projeto)) {
-        acumulador.projetos.push(transacao.projeto);
-      }
+        // Adiciona os projetos únicos
+        if (!acumulador.projetos.includes(transacao.projeto)) {
+          acumulador.projetos.push(transacao.projeto);
+        }
 
-      // Adiciona as categorias únicas
-      if (!acumulador.categorias.includes(transacao.categoria)) {
-        acumulador.categorias.push(transacao.categoria);
+        // Adiciona as categorias únicas
+        if (!acumulador.categorias.includes(transacao.categoria)) {
+          acumulador.categorias.push(transacao.categoria);
+        }
       }
 
       return acumulador;
@@ -108,19 +116,21 @@ export class MainComponent {
     resultado.saldo = resultado.totalEntrada - resultado.totalSaida;
     //console.log(resultado);
     this.resultado = resultado;
-    localStorage.setItem('ultimoProjeto', resultado.projetos[0]);
+    //localStorage.setItem('ultimoProjeto', resultado.projetos[0]);
     this.opcaoSelecionada = resultado.projetos[0];
     this.mostrarValoresPorCategoria('entrada');
   }
 
   mostrarValoresPorCategoria(entradaSaida: string) {
     const categoriasAgrupadas: IValorPorCategoria[] = this.transacoes.reduce((agrupado: any, transacao: ITransacao) => {
-      if (transacao.tipo == entradaSaida) {
-        const { categoria, valor } = transacao;
-        if (!agrupado[categoria]) {
-          agrupado[categoria] = { categoria, valor: 0 };
+      if (transacao.projeto == this.opcaoSelecionada) {
+        if (transacao.tipo == entradaSaida) {
+          const { categoria, valor } = transacao;
+          if (!agrupado[categoria]) {
+            agrupado[categoria] = { categoria, valor: 0 };
+          }
+          agrupado[categoria].valor += valor;
         }
-        agrupado[categoria].valor += valor;
       }
       return agrupado;
     }, {});
