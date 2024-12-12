@@ -52,6 +52,7 @@ export class AuthService {
   async signOut() {
     await this.auth.signOut();
     this.user = null;
+    this.router.navigate(['login']);
   }
 
   private setUserSubject(user: any) {
