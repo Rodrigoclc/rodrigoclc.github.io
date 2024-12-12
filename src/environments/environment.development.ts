@@ -1,7 +1,7 @@
 export const environment = {
     firebaseConfig: {
         apiKey: "AIzaSyBCd4iTj0n0BU93lqZDPuEHMh8mWgkEGRw",
-        authDomain: "gestao-financeira-36985.firebaseapp.com",
+        authDomain: "financeiro-chi.vercel.app",
         projectId: "gestao-financeira-36985",
         storageBucket: "gestao-financeira-36985.appspot.com",
         messagingSenderId: "1032977955413",
