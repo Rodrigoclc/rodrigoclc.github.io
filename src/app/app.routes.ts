@@ -9,6 +9,7 @@ import { EditarCategoriasComponent } from './pages/editar-categorias/editar-cate
 import { EditarProjetosComponent } from './pages/editar-projetos/editar-projetos.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './shared/auth.guard';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -22,5 +23,7 @@ export const routes: Routes = [
     { path: 'adicionar-despesa', component: AdicionarDespesaComponent, canActivate: [authGuard] },
     { path: 'adicionar-renda', component: AdicionarRendaComponent, canActivate: [authGuard] },
     { path: 'editar-cateforias', component: EditarCategoriasComponent, canActivate: [authGuard] },
-    { path: 'editar-projetos', component: EditarProjetosComponent, canActivate: [authGuard] }
+    { path: 'editar-projetos', component: EditarProjetosComponent, canActivate: [authGuard] },
+    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
+
 ];

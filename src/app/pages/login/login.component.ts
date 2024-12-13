@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthService } from '../../services/auth.service';
 import { FirebaseAppModule } from '@angular/fire/app';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../../../environments/environment';
- 
+import { Router } from '@angular/router';
+import { IUsuario } from '../../interfaces/IUsuario';
+import { FirebaseService } from '../../services/firebase.service';
+
 @Component({
   selector: 'app-login',
-  standalone: true, 
+  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -23,6 +26,9 @@ export class LoginComponent implements OnInit {
 
   loginUsuario!: FormGroup;
   initRequest: boolean = false;
+
+  private router = inject(Router);
+  private firebaseService = inject(FirebaseService);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,10 +48,32 @@ export class LoginComponent implements OnInit {
 
   submitForm(): void {
     this.initRequest = true;
+    let usuario: IUsuario = {
+      email: '',
+      telefone: '',
+      fotoUrl: '',
+      uid: '',
+      nome: ''
+    };
     this.authService.login(this.loginUsuario.value.email, this.loginUsuario.value.senha).then((retorno) => {
-      console.log(retorno);
+
+      console.log(retorno.user);
       this.initRequest = false;
+      usuario = {
+        email: retorno.user.email,
+        telefone: retorno.user.phoneNumber,
+        fotoUrl: retorno.user.photoURL,
+        uid: retorno.user.uid,
+        nome: retorno.user.displayName
+      }
+
     });
+    //this.firebaseService.addItem(usuario.uid, usuario);
+    if (usuario.telefone == null) {
+      this.router.navigate(['perfil']);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   googleSignIn() {

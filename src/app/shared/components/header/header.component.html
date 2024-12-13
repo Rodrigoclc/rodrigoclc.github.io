@@ -6,8 +6,26 @@
         <span class="navbar-brand">
             Controle financeiro
         </span>
-        <a (click)="signOut()" class="navbar-brand">
+        <!-- <a (click)="signOut()" class="navbar-brand">
             <i class="fas fa-user"></i>
-        </a>
+        </a> -->
+        <!-- <div class="navbar-brand dropstart">
+            <i type="button" class="fas fa-user" data-bs-toggle="dropdown" aria-expanded="false"></i>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a (click)="signOut()" class="dropdown-item" href="#">Sair</a></li>
+            </ul>
+        </div> -->
+        <div class="btn-group navbar-brand">
+            <i class="fas fa-user" data-bs-toggle="dropdown"
+                data-bs-display="static" aria-expanded="false">
+            </i>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                <li><button [routerLink]="['perfil']" class="dropdown-item" type="button">Ver perfil</button></li>
+                <li><button class="dropdown-item" type="button">Another action</button></li>
+                <li><button (click)="signOut()" class="dropdown-item" type="button">Sair</button></li>
+            </ul>
+        </div>
     </div>
 </nav>
