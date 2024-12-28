@@ -48,38 +48,12 @@ export class LoginComponent implements OnInit {
 
   submitForm(): void {
     this.initRequest = true;
-    let usuario: IUsuario = {
-      email: '',
-      telefone: '',
-      fotoUrl: '',
-      uid: '',
-      nome: ''
-    };
-    this.authService.login(this.loginUsuario.value.email, this.loginUsuario.value.senha).then((retorno) => {
-
-      console.log(retorno.user);
-      this.initRequest = false;
-      usuario = {
-        email: retorno.user.email,
-        telefone: retorno.user.phoneNumber,
-        fotoUrl: retorno.user.photoURL,
-        uid: retorno.user.uid,
-        nome: retorno.user.displayName
-      }
-
-    });
-    //this.firebaseService.addItem(usuario.uid, usuario);
-    if (usuario.telefone == null) {
-      this.router.navigate(['perfil']);
-    } else {
-      this.router.navigate(['/']);
-    }
+    this.authService.login(this.loginUsuario.value.email, this.loginUsuario.value.senha)
+      .then(() => {this.initRequest = false });
   }
 
   googleSignIn() {
-    this.authService.googleSignin().then((retorno) => {
-      console.log(retorno);
-    });
+    this.authService.googleSignin();
   }
 
 }

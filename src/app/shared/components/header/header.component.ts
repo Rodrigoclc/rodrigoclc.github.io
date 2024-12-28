@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../../material/material.module';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { getAuth } from "firebase/auth";
 
 @Component({
   selector: 'app-header',
@@ -15,8 +16,12 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class HeaderComponent {
 
+  user: any;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {
+    const auth = getAuth();
+    this.user = auth.currentUser;
+  }
   signOut() {
     this.authService.signOut();
   }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import firebase from 'firebase/compat/app'
 import { Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
@@ -53,6 +54,7 @@ export class AuthService {
       const credencial = await this.auth.signInWithEmailAndPassword(email, senha);
       this.user = credencial.user!.multiFactor;
       this.setUserSubject(this.user);
+      this.router.navigate(['/']);
       return credencial.user!.multiFactor;
 
     } catch (error) {
@@ -62,18 +64,40 @@ export class AuthService {
   }
 
   async googleSignin(): Promise<any> {
-    try {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential!.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        this.user = user;
+        this.router.navigate(['/']);
+        return user;
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+    // try {
 
-      const provider = new firebase.auth.GoogleAuthProvider();
-      const credential = await this.auth.signInWithPopup(provider);
-      this.user = credential.user;
-      this.router.navigate(['/']);
-      return credential.user!.multiFactor;
+    //   const provider = new firebase.auth.GoogleAuthProvider();
+    //   const credential = await this.auth.signInWithPopup(provider);
+    //   this.user = credential.user;
+    //   this.router.navigate(['/']);
+    //   return credential.user!.multiFactor;
 
-    } catch (error) {
-      this.erro = error;
-      return error;
-    }
+    // } catch (error) {
+    //   this.erro = error;
+    //   return error;
+    // }
   }
 
   async signOut() {

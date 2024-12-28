@@ -18,9 +18,15 @@
             </ul>
         </div> -->
         <div class="btn-group navbar-brand">
-            <i class="fas fa-user" data-bs-toggle="dropdown"
+            @if (user.photoURL == null) {
+                <i class="fas fa-user" data-bs-toggle="dropdown"
+                    data-bs-display="static" aria-expanded="false">
+                </i>
+            } @else {
+                <img [src]="user.photoURL" alt="foto de perfil" style="border-radius: 50%;width: 1.5rem;"  data-bs-toggle="dropdown"
                 data-bs-display="static" aria-expanded="false">
-            </i>
+            }
+            
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
                 <li><button [routerLink]="['perfil']" class="dropdown-item" type="button">Ver perfil</button></li>
                 <li><button class="dropdown-item" type="button">Another action</button></li>
